@@ -8,7 +8,6 @@ package pesto.visual;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import pesto.internal.Entry;
 import pesto.internal.Folder;
 
 /**
@@ -31,7 +30,7 @@ public class DefaultFrame extends javax.swing.JFrame {
 
     public static void refreshView() {
         rootNode.removeAllChildren();
-        rootFolder.getEntries().stream().forEach((e) -> {
+        rootFolder.getFolders().stream().forEach((e) -> {
             rootNode.add(new DefaultMutableTreeNode(e.getName()));
         });
         setModel();
@@ -165,7 +164,7 @@ public class DefaultFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_refreshViewMenuItemActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        rootFolder.addEntry(new Entry(nameField.getText()));
+        rootFolder.addFolder(new Folder(nameField.getText(), rootFolder));
         refreshView();
     }//GEN-LAST:event_jButton1ActionPerformed
 
