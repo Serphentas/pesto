@@ -5,9 +5,13 @@
  */
 package pesto.visual;
 
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import pesto.internal.Entry;
 import pesto.internal.Folder;
 
 /**
@@ -19,16 +23,24 @@ public class DefaultFrame extends javax.swing.JFrame {
     private static final Folder rootFolder = new Folder("Root", null);
     private static final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(rootFolder.getName());
 
+    private static DefaultTableModel dtm;
+    private static Folder currentFolder;
+
     /**
      * Creates new form DefaultFrame
      */
     public DefaultFrame() {
         initComponents();
         setLocationRelativeTo(null);
-        setModel();
+        currentFolder = rootFolder;
+        refreshFolderTree();
+        getPanelLayout().show(mainPanel, "listPanel");
     }
 
-    public static void refreshView() {
+    /**
+     * Refreshes the folder list
+     */
+    public static void refreshFolderTree() {
         rootNode.removeAllChildren();
         rootFolder.getFolders().stream().forEach((e) -> {
             rootNode.add(new DefaultMutableTreeNode(e.getName()));
@@ -36,8 +48,34 @@ public class DefaultFrame extends javax.swing.JFrame {
         setModel();
     }
 
+    /**
+     * Refreshes the entry table to reflect new changes
+     */
+    public static void refreshEntryTable() {
+        updateEntryTableSize();
+        int cnt = 0;
+        for (Entry e : rootFolder.getEntries()) {
+            entryTable.setValueAt(e.getName(), cnt, 0);
+            cnt++;
+        }
+    }
+
     public static void setModel() {
-        dataTree.setModel(new DefaultTreeModel(rootNode));
+        folderTree.setModel(new DefaultTreeModel(rootNode));
+    }
+
+    /**
+     * Sets a new row count for the entry table
+     * <p>
+     */
+    public static void updateEntryTableSize() {
+        dtm = (DefaultTableModel) entryTable.getModel();
+        dtm.setRowCount(currentFolder.getEntries().size());
+        entryTable.setModel(dtm);
+    }
+
+    public static CardLayout getPanelLayout() {
+        return (CardLayout) mainPanel.getLayout();
     }
 
     /**
@@ -49,75 +87,190 @@ public class DefaultFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        dataTree = new javax.swing.JTree();
-        infoPanel = new javax.swing.JPanel();
+        entryTablePopupMenu = new javax.swing.JPopupMenu();
+        deleteEntryPopupMenuItem = new javax.swing.JMenuItem();
+        mainPanel = new javax.swing.JPanel();
+        detailsPanel = new javax.swing.JPanel();
+        okButton = new javax.swing.JButton();
+        nameLabel = new javax.swing.JLabel();
+        nameField = new javax.swing.JTextField();
+        cancelButton = new javax.swing.JButton();
+        listPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        entryTable = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        folderTree = new javax.swing.JTree();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
+        newEntryMenuItem = new javax.swing.JMenuItem();
+        newFolderMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         viewMenu = new javax.swing.JMenu();
-        refreshViewMenuItem = new javax.swing.JMenuItem();
 
-        jMenuItem1.setText("jMenuItem1");
+        deleteEntryPopupMenuItem.setText("jMenuItem1");
+        deleteEntryPopupMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                deleteEntryPopupMenuItemMouseClicked(evt);
+            }
+        });
+        entryTablePopupMenu.add(deleteEntryPopupMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Pesto");
         setMinimumSize(new java.awt.Dimension(632, 384));
+        setPreferredSize(new java.awt.Dimension(632, 384));
 
-        jScrollPane2.setViewportView(dataTree);
+        mainPanel.setLayout(new java.awt.CardLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        detailsPanel.setMaximumSize(new java.awt.Dimension(620, 364));
+        detailsPanel.setName(""); // NOI18N
+        detailsPanel.setPreferredSize(new java.awt.Dimension(0, 0));
+
+        okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
+
+        nameLabel.setText("Name");
+
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout detailsPanelLayout = new javax.swing.GroupLayout(detailsPanel);
+        detailsPanel.setLayout(detailsPanelLayout);
+        detailsPanelLayout.setHorizontalGroup(
+            detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(detailsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(detailsPanelLayout.createSequentialGroup()
+                        .addComponent(nameLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(nameField))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, detailsPanelLayout.createSequentialGroup()
+                        .addGap(0, 474, Short.MAX_VALUE)
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        detailsPanelLayout.setVerticalGroup(
+            detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, detailsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nameLabel)
+                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 277, Short.MAX_VALUE)
+                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(okButton)
+                    .addComponent(cancelButton))
+                .addContainerGap())
+        );
+
+        mainPanel.add(detailsPanel, "detailsPanel");
+
+        listPanel.setPreferredSize(new java.awt.Dimension(0, 0));
+
+        jScrollPane1.setDoubleBuffered(true);
+
+        entryTable.setAutoCreateRowSorter(true);
+        entryTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Name", "Username"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
 
-        javax.swing.GroupLayout infoPanelLayout = new javax.swing.GroupLayout(infoPanel);
-        infoPanel.setLayout(infoPanelLayout);
-        infoPanelLayout.setHorizontalGroup(
-            infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(infoPanelLayout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        entryTable.setDoubleBuffered(true);
+        entryTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                entryTableMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                entryTableMouseReleased(evt);
+            }
+        });
+        jScrollPane1.setViewportView(entryTable);
+
+        jScrollPane2.setDoubleBuffered(true);
+
+        folderTree.setDoubleBuffered(true);
+        folderTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+                folderTreeValueChanged(evt);
+            }
+        });
+        jScrollPane2.setViewportView(folderTree);
+
+        javax.swing.GroupLayout listPanelLayout = new javax.swing.GroupLayout(listPanel);
+        listPanel.setLayout(listPanelLayout);
+        listPanelLayout.setHorizontalGroup(
+            listPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(listPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1)
+                .addContainerGap())
         );
-        infoPanelLayout.setVerticalGroup(
-            infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(infoPanelLayout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+        listPanelLayout.setVerticalGroup(
+            listPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, listPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(listPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
-        menuBar.setMargin(new java.awt.Insets(3, 10, 0, 0));
+        mainPanel.add(listPanel, "listPanel");
+
+        menuBar.setInheritsPopupMenu(true);
+        menuBar.setMargin(new java.awt.Insets(3, 10, 3, 0));
         menuBar.setMinimumSize(new java.awt.Dimension(95, 17));
         menuBar.setRequestFocusEnabled(false);
 
         fileMenu.setText("File");
+
+        newEntryMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        newEntryMenuItem.setText("New entry");
+        newEntryMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newEntryMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(newEntryMenuItem);
+
+        newFolderMenuItem.setText("New folder");
+        newFolderMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newFolderMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(newFolderMenuItem);
+
         menuBar.add(fileMenu);
 
         editMenu.setText("Edit");
         menuBar.add(editMenu);
 
         viewMenu.setText("View");
-
-        refreshViewMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
-        refreshViewMenuItem.setText("Refresh");
-        refreshViewMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                refreshViewMenuItemActionPerformed(evt);
-            }
-        });
-        viewMenu.add(refreshViewMenuItem);
-
         menuBar.add(viewMenu);
 
         setJMenuBar(menuBar);
@@ -126,29 +279,62 @@ public class DefaultFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(infoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(mainPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(infoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap())
+            .addComponent(mainPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void refreshViewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshViewMenuItemActionPerformed
-        refreshView();
-    }//GEN-LAST:event_refreshViewMenuItemActionPerformed
+    private void newEntryMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newEntryMenuItemActionPerformed
+        getPanelLayout().show(mainPanel, "detailsPanel");
+    }//GEN-LAST:event_newEntryMenuItemActionPerformed
+
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        rootFolder.addEntry(new Entry(nameField.getText()));
+        nameField.setText("");
+
+        getPanelLayout().show(mainPanel, "listPanel");
+        refreshEntryTable();
+    }//GEN-LAST:event_okButtonActionPerformed
+
+    private void entryTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_entryTableMousePressed
+        if (evt.isPopupTrigger()) {
+            entryTablePopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_entryTableMousePressed
+
+    private void entryTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_entryTableMouseReleased
+        entryTableMousePressed(evt);
+    }//GEN-LAST:event_entryTableMouseReleased
+
+    private void folderTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_folderTreeValueChanged
+
+    }//GEN-LAST:event_folderTreeValueChanged
+
+    private void deleteEntryPopupMenuItemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteEntryPopupMenuItemMouseClicked
+        Entry tmp;
+        for (Entry e : rootFolder.getEntries()) {
+            if (e.getName().equals(entryTable.getValueAt(entryTable.getSelectedRow(), 1))) {
+                tmp = e;
+            }
+        }
+    }//GEN-LAST:event_deleteEntryPopupMenuItemMouseClicked
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        getPanelLayout().show(mainPanel, "listPanel");
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void newFolderMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newFolderMenuItemActionPerformed
+        String res = JOptionPane.showInputDialog(this, "Folder name:", "New folder", JOptionPane.QUESTION_MESSAGE);
+        if (res != null) {
+            currentFolder.addFolder(new Folder(res, currentFolder));
+            refreshFolderTree();
+        }
+    }//GEN-LAST:event_newFolderMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -192,16 +378,24 @@ public class DefaultFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private static javax.swing.JTree dataTree;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JMenuItem deleteEntryPopupMenuItem;
+    private static javax.swing.JPanel detailsPanel;
     private javax.swing.JMenu editMenu;
+    private static javax.swing.JTable entryTable;
+    private javax.swing.JPopupMenu entryTablePopupMenu;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JPanel infoPanel;
-    private javax.swing.JMenuItem jMenuItem1;
+    private static javax.swing.JTree folderTree;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
+    private static javax.swing.JPanel listPanel;
+    private static javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem refreshViewMenuItem;
+    private static javax.swing.JTextField nameField;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JMenuItem newEntryMenuItem;
+    private javax.swing.JMenuItem newFolderMenuItem;
+    private static javax.swing.JButton okButton;
     private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
 
