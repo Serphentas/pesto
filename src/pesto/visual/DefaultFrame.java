@@ -166,6 +166,7 @@ public class DefaultFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         rootFolder.addEntry(new Entry(nameField.getText()));
+        refreshView();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
