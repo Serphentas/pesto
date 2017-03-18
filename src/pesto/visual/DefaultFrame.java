@@ -87,6 +87,10 @@ public class DefaultFrame extends javax.swing.JFrame {
 
         jScrollPane2.setViewportView(dataTree);
 
+        jMenuBar1.setMargin(new java.awt.Insets(0, 10, 0, 0));
+        jMenuBar1.setMinimumSize(new java.awt.Dimension(95, 17));
+        jMenuBar1.setRequestFocusEnabled(false);
+
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
 
@@ -133,7 +137,7 @@ public class DefaultFrame extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(24, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
