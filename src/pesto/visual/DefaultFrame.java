@@ -58,11 +58,11 @@ public class DefaultFrame extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         dataTree = new javax.swing.JTree();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        menuBar = new javax.swing.JMenuBar();
+        fileMenu = new javax.swing.JMenu();
+        editMenu = new javax.swing.JMenu();
+        viewMenu = new javax.swing.JMenu();
+        refreshViewMenuItem = new javax.swing.JMenuItem();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -87,30 +87,30 @@ public class DefaultFrame extends javax.swing.JFrame {
 
         jScrollPane2.setViewportView(dataTree);
 
-        jMenuBar1.setMargin(new java.awt.Insets(0, 10, 0, 0));
-        jMenuBar1.setMinimumSize(new java.awt.Dimension(95, 17));
-        jMenuBar1.setRequestFocusEnabled(false);
+        menuBar.setMargin(new java.awt.Insets(0, 10, 0, 0));
+        menuBar.setMinimumSize(new java.awt.Dimension(95, 17));
+        menuBar.setRequestFocusEnabled(false);
 
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
+        fileMenu.setText("File");
+        menuBar.add(fileMenu);
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        editMenu.setText("Edit");
+        menuBar.add(editMenu);
 
-        jMenu3.setText("View");
+        viewMenu.setText("View");
 
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
-        jMenuItem2.setText("Refresh");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        refreshViewMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
+        refreshViewMenuItem.setText("Refresh");
+        refreshViewMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                refreshViewMenuItemActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem2);
+        viewMenu.add(refreshViewMenuItem);
 
-        jMenuBar1.add(jMenu3);
+        menuBar.add(viewMenu);
 
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -160,9 +160,9 @@ public class DefaultFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_nameFieldActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void refreshViewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshViewMenuItemActionPerformed
         refreshView();
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_refreshViewMenuItemActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         rootFolder.addEntry(new Entry(nameField.getText()));
@@ -211,18 +211,18 @@ public class DefaultFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private static javax.swing.JTree dataTree;
+    private javax.swing.JMenu editMenu;
+    private javax.swing.JMenu fileMenu;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JMenuBar menuBar;
     private static javax.swing.JTextField nameField;
+    private javax.swing.JMenuItem refreshViewMenuItem;
+    private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
 
 }
