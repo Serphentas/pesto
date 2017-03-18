@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class Folder {
 
+    private final List<Folder> folders = new ArrayList<>();
     private final List<Entry> entries = new ArrayList<>();
     private final long creationTime;
     private final Folder parent;
@@ -84,5 +85,23 @@ public class Folder {
      */
     public List<Entry> getEntries() {
         return entries;
+    }
+
+    /**
+     * Adds a folder to this folder's folder list
+     *
+     * @param f folder to add
+     */
+    public void addFolder(Folder f) {
+        folders.add(f);
+    }
+
+    /**
+     * Returns the folder's folder list
+     *
+     * @return folder's folder list
+     */
+    public List<Folder> getFolders() {
+        return folders;
     }
 }
