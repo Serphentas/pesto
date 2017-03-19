@@ -1,7 +1,9 @@
 package pesto.internal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.bouncycastle.util.encoders.Hex;
 import pesto.internal.crypto.GPCrypto;
 
@@ -13,7 +15,7 @@ import pesto.internal.crypto.GPCrypto;
 public class Folder {
 
     private final List<Folder> folders = new ArrayList<>();
-    private final List<Entry> entries = new ArrayList<>();
+    private final Map<String, Entry> entries = new HashMap<>();
     private final long creationTime;
     private final Folder parent;
     private final String name,
@@ -40,7 +42,7 @@ public class Folder {
      * @param e entry to add
      */
     public void addEntry(Entry e) {
-        entries.add(e);
+        entries.put(e.getName(), e);
     }
 
     /**
@@ -49,7 +51,7 @@ public class Folder {
      * @param e entry to delete
      */
     public void deleteEntry(Entry e) {
-        entries.remove(e);
+        entries.remove(e.getName());
     }
 
     /**
@@ -101,11 +103,11 @@ public class Folder {
     }
 
     /**
-     * Returns the folder's entries as a list
+     * Returns the folder's entries as a map
      *
-     * @return folder entry list
+     * @return folder entry map
      */
-    public List<Entry> getEntries() {
+    public Map<String, Entry> getEntries() {
         return entries;
     }
 
