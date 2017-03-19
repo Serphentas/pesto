@@ -23,7 +23,7 @@ public class Entry {
     private final String name,
             uuid;
 
-    private String username,
+    private String username = "",
             loginURL;
     private char[] password;
 
