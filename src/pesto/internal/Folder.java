@@ -80,7 +80,7 @@ public class Folder {
         if (tmpName != null) {
             entries.remove(tmpName);
         }
-        return tmpName == null;
+        return tmpName != null;
     }
 
     /**
