@@ -111,7 +111,7 @@ public class Entry implements Serializable {
     /**
      * Returns the entry's username field
      *
-     * @return username field
+     * @return username field, {@code null} if not set
      */
     public String getUsername() {
         return ((Username) getProperty("username")).getUsername();
@@ -120,7 +120,7 @@ public class Entry implements Serializable {
     /**
      * Returns the entry's password field
      *
-     * @return password field
+     * @return password field, {@code null} if not set
      */
     public char[] getPassword() {
         return ((Password) getProperty("password")).getPassword();
