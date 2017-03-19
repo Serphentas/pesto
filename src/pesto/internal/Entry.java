@@ -1,8 +1,14 @@
 package pesto.internal;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import org.bouncycastle.util.encoders.Hex;
 import pesto.internal.crypto.GPCrypto;
+import pesto.internal.properties.Password;
+import pesto.internal.properties.Property;
+import pesto.internal.properties.Username;
 
 /**
  * Represents an entry in the password database
@@ -20,23 +26,28 @@ import pesto.internal.crypto.GPCrypto;
  */
 public class Entry implements Serializable {
 
+    private final Map<String, Property> properties = new HashMap<>();
     private final long creationTime;
     private final String name,
             uuid;
 
-    private String username = "",
-            loginURL;
-    private char[] password;
+    private Iterator<Map.Entry<String, Property>> propertiesIter;
+    private String loginURL;
 
     /**
-     * Creates an {@link Entry} with the specified name
+     * Creates an {@link Entry} with the specified name and {@link Property}
+     * elements
      *
-     * @param name name of the entry
+     * @param name  name of the entry
+     * @param props array of properties
      */
-    public Entry(String name) {
+    public Entry(String name, Property... props) {
         this.name = name;
         this.creationTime = System.currentTimeMillis();
         this.uuid = Hex.toHexString(GPCrypto.SHA256(GPCrypto.randomGen(32)));
+        for (Property p : props) {
+            properties.put(p.getType(), p);
+        }
     }
 
     /**
@@ -67,12 +78,43 @@ public class Entry implements Serializable {
     }
 
     /**
+     * Returns the entry's property with the given type
+     *
+     * @param type type of property to get
+     *
+     * @return matching property if found, else {@code null}
+     */
+    public Property getProperty(String type) {
+        Property tmpProperty;
+        propertiesIter = properties.entrySet().iterator();
+        while (propertiesIter.hasNext()) {
+            tmpProperty = propertiesIter.next().getValue();
+            if (tmpProperty.getType().equals(type)) {
+                return tmpProperty;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Sets the given property for the entry
+     * <p>
+     * If a property of the same type exists, its content will be updated with
+     * the new one
+     *
+     * @param p property to set
+     */
+    public void setProperty(Property p) {
+        properties.put(p.getType(), p);
+    }
+
+    /**
      * Returns the entry's username field
      *
      * @return username field
      */
     public String getUsername() {
-        return this.username;
+        return ((Username) getProperty("username")).getUsername();
     }
 
     /**
@@ -81,7 +123,7 @@ public class Entry implements Serializable {
      * @return password field
      */
     public char[] getPassword() {
-        return password;
+        return ((Password) getProperty("password")).getPassword();
     }
 
     /**
@@ -99,7 +141,7 @@ public class Entry implements Serializable {
      * @param username new username
      */
     public void setUsername(String username) {
-        this.username = username;
+        setProperty(new Username(username));
     }
 
     /**
@@ -108,6 +150,6 @@ public class Entry implements Serializable {
      * @param password new password
      */
     public void setPassword(char[] password) {
-        this.password = password;
+        setProperty(new Password(password));
     }
 }

@@ -15,6 +15,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import pesto.internal.Entry;
 import pesto.internal.Folder;
+import pesto.internal.properties.Password;
+import pesto.internal.properties.Username;
 
 /**
  *
@@ -470,10 +472,9 @@ public class DefaultFrame extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Error: entry must have a name.",
                         "New entry", JOptionPane.ERROR_MESSAGE);
             } else {
-                Entry newEntry = new Entry(createPanelNameField.getText());
-                newEntry.setUsername(createPanelUNField.getText());
-                newEntry.setPassword(createPanelPWField.getPassword());
-                currentFolder.addEntry(newEntry);
+                currentFolder.addEntry(new Entry(createPanelNameField.getText(),
+                        new Username(createPanelUNField.getText()),
+                        new Password(createPanelPWField.getPassword())));
                 getPanelLayout().show(mainPanel, "listPanel");
                 refreshEntryTable();
                 resetFields();
