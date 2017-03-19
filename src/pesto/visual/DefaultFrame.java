@@ -24,7 +24,7 @@ public class DefaultFrame extends javax.swing.JFrame {
     private static final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(rootFolder.getName());
 
     private static DefaultTableModel dtm;
-    private static Folder currentFolder;
+    private static Folder currentFolder = rootFolder;
 
     /**
      * Creates new form DefaultFrame
@@ -32,7 +32,6 @@ public class DefaultFrame extends javax.swing.JFrame {
     public DefaultFrame() {
         initComponents();
         setLocationRelativeTo(null);
-        currentFolder = rootFolder;
         refreshFolderTree();
         getPanelLayout().show(mainPanel, "listPanel");
     }
@@ -54,7 +53,7 @@ public class DefaultFrame extends javax.swing.JFrame {
     public static void refreshEntryTable() {
         updateEntryTableSize();
         int cnt = 0;
-        for (Entry e : rootFolder.getEntries()) {
+        for (Entry e : currentFolder.getEntries()) {
             entryTable.setValueAt(e.getName(), cnt, 0);
             cnt++;
         }
@@ -107,10 +106,10 @@ public class DefaultFrame extends javax.swing.JFrame {
         editMenu = new javax.swing.JMenu();
         viewMenu = new javax.swing.JMenu();
 
-        deleteEntryPopupMenuItem.setText("jMenuItem1");
-        deleteEntryPopupMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                deleteEntryPopupMenuItemMouseClicked(evt);
+        deleteEntryPopupMenuItem.setText("Delete");
+        deleteEntryPopupMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteEntryPopupMenuItemActionPerformed(evt);
             }
         });
         entryTablePopupMenu.add(deleteEntryPopupMenuItem);
@@ -192,9 +191,16 @@ public class DefaultFrame extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         entryTable.setDoubleBuffered(true);
@@ -294,7 +300,7 @@ public class DefaultFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_newEntryMenuItemActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        rootFolder.addEntry(new Entry(nameField.getText()));
+        currentFolder.addEntry(new Entry(nameField.getText()));
         nameField.setText("");
 
         getPanelLayout().show(mainPanel, "listPanel");
@@ -315,15 +321,6 @@ public class DefaultFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_folderTreeValueChanged
 
-    private void deleteEntryPopupMenuItemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteEntryPopupMenuItemMouseClicked
-        Entry tmp;
-        for (Entry e : rootFolder.getEntries()) {
-            if (e.getName().equals(entryTable.getValueAt(entryTable.getSelectedRow(), 1))) {
-                tmp = e;
-            }
-        }
-    }//GEN-LAST:event_deleteEntryPopupMenuItemMouseClicked
-
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         getPanelLayout().show(mainPanel, "listPanel");
     }//GEN-LAST:event_cancelButtonActionPerformed
@@ -335,6 +332,20 @@ public class DefaultFrame extends javax.swing.JFrame {
             refreshFolderTree();
         }
     }//GEN-LAST:event_newFolderMenuItemActionPerformed
+
+    private void deleteEntryPopupMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEntryPopupMenuItemActionPerformed
+        Entry tmp = null;
+        for (Entry e : currentFolder.getEntries()) {
+            if (e.getName().equals(entryTable.getValueAt(entryTable.getSelectedRow(), 0))) {
+                tmp = e;
+                break;
+            }
+        }
+        if (null != tmp) {
+            currentFolder.deleteEntry(tmp);
+            refreshEntryTable();
+        }
+    }//GEN-LAST:event_deleteEntryPopupMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
