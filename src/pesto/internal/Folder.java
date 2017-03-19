@@ -50,6 +50,25 @@ public class Folder {
     }
 
     /**
+     * Returns the entry with the given name from the folder's entry map
+     *
+     * @param name name of entry to return
+     *
+     * @return entry whose name matches the specified string if found, else
+     *         {@code null}
+     */
+    public Entry getEntry(String name) {
+        iter = entries.entrySet().iterator();
+        while (iter.hasNext()) {
+            tmpMapEntry = iter.next();
+            if (tmpMapEntry.getKey().equals(name)) {
+                return tmpMapEntry.getValue();
+            }
+        }
+        return null;
+    }
+
+    /**
      * Deletes the specified entry from the folder's entry list
      *
      * @param e entry to delete
