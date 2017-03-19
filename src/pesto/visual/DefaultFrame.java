@@ -6,6 +6,8 @@
 package pesto.visual;
 
 import java.awt.CardLayout;
+import java.util.Iterator;
+import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
@@ -23,8 +25,11 @@ public class DefaultFrame extends javax.swing.JFrame {
     private static final Folder rootFolder = new Folder("Root", null);
     private static final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(rootFolder.getName());
 
+    private static Iterator<Map.Entry<String, Entry>> entriesIter;
+    private static Map.Entry<String, Entry> tmpMapEntry;
     private static DefaultTableModel dtm;
     private static Folder currentFolder = rootFolder;
+    //private static Entry tmpEntry;
 
     /**
      * Creates new form DefaultFrame
@@ -52,9 +57,10 @@ public class DefaultFrame extends javax.swing.JFrame {
      */
     public static void refreshEntryTable() {
         updateEntryTableSize();
+        entriesIter = currentFolder.getEntries().entrySet().iterator();
         int cnt = 0;
-        for (Entry e : currentFolder.getEntries()) {
-            entryTable.setValueAt(e.getName(), cnt, 0);
+        while (entriesIter.hasNext()) {
+            entryTable.setValueAt(entriesIter.next().getValue().getName(), cnt, 0);
             cnt++;
         }
     }
@@ -300,11 +306,26 @@ public class DefaultFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_newEntryMenuItemActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        currentFolder.addEntry(new Entry(nameField.getText()));
-        nameField.setText("");
+        boolean noDuplicate = true;
+        if (currentFolder.getEntries().size() > 0) {
+            entriesIter = currentFolder.getEntries().entrySet().iterator();
+            while (entriesIter.hasNext()) {
+                tmpMapEntry = entriesIter.next();
+                if (tmpMapEntry.getKey().equals(nameField.getText())) {
+                    JOptionPane.showMessageDialog(this, "Error: an entry with the same name already exists.",
+                            "New entry", JOptionPane.ERROR_MESSAGE);
+                    noDuplicate = false;
+                    break;
+                }
+            }
+        }
 
-        getPanelLayout().show(mainPanel, "listPanel");
-        refreshEntryTable();
+        if (noDuplicate) {
+            currentFolder.addEntry(new Entry(nameField.getText()));
+            nameField.setText("");
+            getPanelLayout().show(mainPanel, "listPanel");
+            refreshEntryTable();
+        }
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void entryTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_entryTableMousePressed
@@ -334,16 +355,14 @@ public class DefaultFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_newFolderMenuItemActionPerformed
 
     private void deleteEntryPopupMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEntryPopupMenuItemActionPerformed
-        Entry tmp = null;
-        for (Entry e : currentFolder.getEntries()) {
-            if (e.getName().equals(entryTable.getValueAt(entryTable.getSelectedRow(), 0))) {
-                tmp = e;
+        entriesIter = currentFolder.getEntries().entrySet().iterator();
+        while (entriesIter.hasNext()) {
+            tmpMapEntry = entriesIter.next();
+            if (tmpMapEntry.getKey().equals(entryTable.getValueAt(entryTable.getSelectedRow(), 0))) {
+                currentFolder.deleteEntry(tmpMapEntry.getValue());
+                refreshEntryTable();
                 break;
             }
-        }
-        if (null != tmp) {
-            currentFolder.deleteEntry(tmp);
-            refreshEntryTable();
         }
     }//GEN-LAST:event_deleteEntryPopupMenuItemActionPerformed
 
