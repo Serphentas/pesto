@@ -1,5 +1,8 @@
 package pesto.internal;
 
+import org.bouncycastle.util.encoders.Hex;
+import pesto.internal.crypto.GPCrypto;
+
 /**
  * Represents an entry in the password database
  * <p>
@@ -17,7 +20,8 @@ package pesto.internal;
 public class Entry {
 
     private final long creationTime;
-    private final String name;
+    private final String name,
+            uuid;
 
     private String username,
             loginURL;
@@ -31,6 +35,7 @@ public class Entry {
     public Entry(String name) {
         this.name = name;
         this.creationTime = System.currentTimeMillis();
+        this.uuid = Hex.toHexString(GPCrypto.SHA256(GPCrypto.randomGen(32)));
     }
 
     /**
@@ -44,10 +49,20 @@ public class Entry {
 
     /**
      * Returns the entry's creation time
+     *
      * @return entry creation time
      */
     public long getCreationTime() {
         return creationTime;
+    }
+
+    /**
+     * Returns the entry's UUID
+     *
+     * @return entry UUID
+     */
+    public String getUUID() {
+        return uuid;
     }
 
     /**

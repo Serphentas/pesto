@@ -2,6 +2,8 @@ package pesto.internal;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.bouncycastle.util.encoders.Hex;
+import pesto.internal.crypto.GPCrypto;
 
 /**
  * Represents a folder in which children {@link Entry} and folders may reside
@@ -14,7 +16,8 @@ public class Folder {
     private final List<Entry> entries = new ArrayList<>();
     private final long creationTime;
     private final Folder parent;
-    private final String name;
+    private final String name,
+            uuid;
     private final boolean hasParent;
 
     /**
@@ -28,6 +31,7 @@ public class Folder {
         this.creationTime = System.currentTimeMillis();
         this.parent = parent;
         this.hasParent = parent != null;
+        this.uuid = Hex.toHexString(GPCrypto.SHA256(GPCrypto.randomGen(32)));
     }
 
     /**
@@ -37,6 +41,15 @@ public class Folder {
      */
     public void addEntry(Entry e) {
         entries.add(e);
+    }
+
+    /**
+     * Deletes the specified entry from the folder's entry list
+     *
+     * @param e entry to delete
+     */
+    public void deleteEntry(Entry e) {
+        entries.remove(e);
     }
 
     /**
@@ -55,6 +68,15 @@ public class Folder {
      */
     public long getCreationTime() {
         return this.creationTime;
+    }
+
+    /**
+     * Returns the folder's UUID
+     *
+     * @return folder UUID
+     */
+    public String getUUID() {
+        return uuid;
     }
 
     /**
