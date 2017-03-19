@@ -61,8 +61,11 @@ public class DefaultFrame extends javax.swing.JFrame {
         updateEntryTableSize();
         entriesIter = currentFolder.getEntries().entrySet().iterator();
         int cnt = 0;
+        Entry tmpEntry;
         while (entriesIter.hasNext()) {
-            entryTable.setValueAt(entriesIter.next().getValue().getName(), cnt, 0);
+            tmpEntry = entriesIter.next().getValue();
+            entryTable.setValueAt(tmpEntry.getName(), cnt, 0);
+            entryTable.setValueAt(tmpEntry.getUsername(), cnt, 1);
             cnt++;
         }
     }
@@ -549,6 +552,7 @@ public class DefaultFrame extends javax.swing.JFrame {
         currentEntry.setPassword(editPanelPWField.getPassword());
         isPWShown = false;
         getPanelLayout().show(mainPanel, "listPanel");
+        refreshEntryTable();
         resetFields();
     }//GEN-LAST:event_editPanelOKButtonActionPerformed
 
@@ -568,8 +572,8 @@ public class DefaultFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_editPanelPWToggleButtonActionPerformed
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        if(JOptionPane.showConfirmDialog(this, "Exit Pesto ?", "Exit", JOptionPane.YES_NO_OPTION, 
-                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+        if (JOptionPane.showConfirmDialog(this, "Exit Pesto ?", "Exit", JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
             dispose();
         }
     }//GEN-LAST:event_exitMenuItemActionPerformed
@@ -649,5 +653,4 @@ public class DefaultFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem newFolderMenuItem;
     private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
-
 }
