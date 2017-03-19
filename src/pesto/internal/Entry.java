@@ -92,4 +92,22 @@ public class Entry {
         return this.loginURL;
     }
 
+    /**
+     * Sets the entry's username field
+     *
+     * @param username new username
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * Sets the entry's password field
+     *
+     * @param password new password
+     */
+    public void setPassword(char[] password) {
+        this.password = password;
+    }
+
 }
