@@ -1,5 +1,6 @@
 package pesto.internal;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,7 +14,7 @@ import pesto.internal.crypto.GPCrypto;
  *
  * @author Serphentas
  */
-public class Folder {
+public class Folder implements Serializable {
 
     private final List<Folder> folders = new ArrayList<>();
     private final Map<String, Entry> entries = new HashMap<>();

@@ -1,5 +1,6 @@
 package pesto.internal;
 
+import java.io.Serializable;
 import org.bouncycastle.util.encoders.Hex;
 import pesto.internal.crypto.GPCrypto;
 
@@ -17,7 +18,7 @@ import pesto.internal.crypto.GPCrypto;
  *
  * @author Serphentas
  */
-public class Entry {
+public class Entry implements Serializable {
 
     private final long creationTime;
     private final String name,
