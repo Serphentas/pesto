@@ -1,5 +1,7 @@
 package pesto;
 
+import java.security.Security;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import pesto.visual.DefaultFrame;
 
 /**
@@ -8,7 +10,9 @@ import pesto.visual.DefaultFrame;
  * @author Serphentas
  */
 public class Main {
+
     public static void main(String args[]) {
-      DefaultFrame.main(args);
+        Security.addProvider(new BouncyCastleProvider());
+        DefaultFrame.main(args);
     }
 }
