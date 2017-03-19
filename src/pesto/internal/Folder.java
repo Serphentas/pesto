@@ -62,8 +62,10 @@ public class Folder {
      * Deletes the entry with the specified name from the folder's entry map
      *
      * @param name name of the entry to delete
+     *
+     * @return {@code true} if an entry has been deleted, else {@code false}
      */
-    public void deleteEntry(String name) {
+    public boolean deleteEntry(String name) {
         String tmpName = null;
 
         iter = entries.entrySet().iterator();
@@ -78,6 +80,7 @@ public class Folder {
         if (tmpName != null) {
             entries.remove(tmpName);
         }
+        return tmpName == null;
     }
 
     /**
