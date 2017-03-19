@@ -2,6 +2,7 @@ package pesto.internal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.bouncycastle.util.encoders.Hex;
@@ -21,6 +22,9 @@ public class Folder {
     private final String name,
             uuid;
     private final boolean hasParent;
+
+    private Iterator<Map.Entry<String, Entry>> iter;
+    private Map.Entry<String, Entry> tmpMapEntry;
 
     /**
      * Creates a folder in which children entries and folders may reside
@@ -52,6 +56,28 @@ public class Folder {
      */
     public void deleteEntry(Entry e) {
         entries.remove(e.getName());
+    }
+
+    /**
+     * Deletes the entry with the specified name from the folder's entry map
+     *
+     * @param name name of the entry to delete
+     */
+    public void deleteEntry(String name) {
+        String tmpName = null;
+
+        iter = entries.entrySet().iterator();
+        while (iter.hasNext()) {
+            tmpMapEntry = iter.next();
+            if (tmpMapEntry.getKey().equals(name)) {
+                tmpName = tmpMapEntry.getKey();
+                break;
+            }
+        }
+
+        if (tmpName != null) {
+            entries.remove(tmpName);
+        }
     }
 
     /**
