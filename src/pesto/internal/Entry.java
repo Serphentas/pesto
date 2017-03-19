@@ -28,9 +28,9 @@ public class Entry {
     private char[] password;
 
     /**
-     * Creates an {@link Entry} object with the specified name
+     * Creates an {@link Entry} with the specified name
      *
-     * @param name
+     * @param name name of the entry
      */
     public Entry(String name) {
         this.name = name;
@@ -109,5 +109,4 @@ public class Entry {
     public void setPassword(char[] password) {
         this.password = password;
     }
-
 }

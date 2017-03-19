@@ -41,7 +41,7 @@ public class Folder {
     }
 
     /**
-     * Adds an entry to the folder's entry list
+     * Adds an entry to the folder's entry map
      *
      * @param e entry to add
      */
@@ -69,7 +69,7 @@ public class Folder {
     }
 
     /**
-     * Deletes the specified entry from the folder's entry list
+     * Deletes the specified entry from the folder's entry map
      *
      * @param e entry to delete
      */

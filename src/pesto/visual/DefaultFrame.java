@@ -26,7 +26,6 @@ public class DefaultFrame extends javax.swing.JFrame {
     private static final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(rootFolder.getName());
 
     private static Iterator<Map.Entry<String, Entry>> entriesIter;
-    private static Map.Entry<String, Entry> tmpMapEntry;
     private static DefaultTableModel dtm;
     private static Folder currentFolder = rootFolder;
     private static boolean isPWShown = false;
@@ -43,7 +42,7 @@ public class DefaultFrame extends javax.swing.JFrame {
     }
 
     /**
-     * Refreshes the folder list
+     * Refreshes the folder tree to reflect new changes
      */
     public static void refreshFolderTree() {
         rootNode.removeAllChildren();
@@ -66,13 +65,15 @@ public class DefaultFrame extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Sets the folder tree model
+     */
     public static void setModel() {
         folderTree.setModel(new DefaultTreeModel(rootNode));
     }
 
     /**
-     * Sets a new row count for the entry table
-     * <p>
+     * Sets the entry table's row count to the current folder's entry map size
      */
     public static void updateEntryTableSize() {
         dtm = (DefaultTableModel) entryTable.getModel();
@@ -80,6 +81,11 @@ public class DefaultFrame extends javax.swing.JFrame {
         entryTable.setModel(dtm);
     }
 
+    /**
+     * Returns the main panel's card layout
+     *
+     * @return main panel card layout
+     */
     public static CardLayout getPanelLayout() {
         return (CardLayout) mainPanel.getLayout();
     }
