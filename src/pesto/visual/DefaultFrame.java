@@ -143,6 +143,8 @@ public class DefaultFrame extends javax.swing.JFrame {
         fileMenu = new javax.swing.JMenu();
         newEntryMenuItem = new javax.swing.JMenuItem();
         newFolderMenuItem = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        exitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         viewMenu = new javax.swing.JMenu();
 
@@ -154,10 +156,15 @@ public class DefaultFrame extends javax.swing.JFrame {
         });
         entryTablePopupMenu.add(deleteEntryPopupMenuItem);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Pesto");
         setMinimumSize(new java.awt.Dimension(632, 384));
         setPreferredSize(new java.awt.Dimension(632, 384));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         mainPanel.setLayout(new java.awt.CardLayout());
 
@@ -437,6 +444,16 @@ public class DefaultFrame extends javax.swing.JFrame {
             }
         });
         fileMenu.add(newFolderMenuItem);
+        fileMenu.add(jSeparator2);
+
+        exitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        exitMenuItem.setText("Exit");
+        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(exitMenuItem);
 
         menuBar.add(fileMenu);
 
@@ -550,6 +567,17 @@ public class DefaultFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_editPanelPWToggleButtonActionPerformed
 
+    private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
+        if(JOptionPane.showConfirmDialog(this, "Exit Pesto ?", "Exit", JOptionPane.YES_NO_OPTION, 
+                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+            dispose();
+        }
+    }//GEN-LAST:event_exitMenuItemActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        exitMenuItemActionPerformed(null);
+    }//GEN-LAST:event_formWindowClosing
+
     /**
      * @param args the command line arguments
      */
@@ -606,11 +634,13 @@ public class DefaultFrame extends javax.swing.JFrame {
     private javax.swing.JLabel editPanelUNLabel;
     private static javax.swing.JTable entryTable;
     private javax.swing.JPopupMenu entryTablePopupMenu;
+    private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private static javax.swing.JTree folderTree;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private static javax.swing.JPanel listPanel;
     private static javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
