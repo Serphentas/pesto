@@ -1,12 +1,14 @@
 package pesto.internal.properties;
 
+import java.io.Serializable;
+
 /**
  * Represents properties an {@link Entry} may have, such as passwords and
  * usernames
  *
  * @author Serphentas
  */
-public abstract class Property {
+public abstract class Property implements Serializable {
 
     private final String type;
 
