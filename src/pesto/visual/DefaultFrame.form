@@ -387,6 +387,9 @@
                   <Properties>
                     <Property name="doubleBuffered" type="boolean" value="true"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="valueChanged" listener="javax.swing.event.TreeSelectionListener" parameters="javax.swing.event.TreeSelectionEvent" handler="folderTreeValueChanged"/>
+                  </Events>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
                   </AuxValues>
@@ -466,13 +469,12 @@
                               <Component id="editPanelUNLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="editPanelPWField" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="editPanelPWLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="editPanelPWToggleButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="170" max="32767" attributes="0"/>
+                      <EmptySpace pref="176" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="editPanelCancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="editPanelOKButton" alignment="3" min="-2" max="-2" attributes="0"/>

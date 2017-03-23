@@ -6,6 +6,7 @@
 package pesto.visual;
 
 import java.awt.CardLayout;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -105,6 +106,29 @@ public class DefaultFrame extends javax.swing.JFrame {
         editPanelNameField.setText("");
         editPanelUNField.setText("");
         editPanelPWField.setText("");
+    }
+
+    /**
+     * Searches all folders starting from the specified folder to find one that
+     * matches the given UUID
+     *
+     * @param parent
+     * @param uuid
+     *
+     * @return
+     */
+    public static Folder getFolder(Folder parent, String uuid) {
+        if (parent.getUUID().equals(uuid)) {
+            return parent;
+        }
+        for (Folder children : parent.getFolders()) {
+            if (children.getUUID().equals(uuid)) {
+                return children;
+            } else if (!children.getFolders().isEmpty()) {
+                return getFolder(children, uuid);
+            }
+        }
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -302,6 +326,11 @@ public class DefaultFrame extends javax.swing.JFrame {
         jScrollPane2.setDoubleBuffered(true);
 
         folderTree.setDoubleBuffered(true);
+        folderTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+                folderTreeValueChanged(evt);
+            }
+        });
         jScrollPane2.setViewportView(folderTree);
 
         javax.swing.GroupLayout listPanelLayout = new javax.swing.GroupLayout(listPanel);
@@ -410,12 +439,11 @@ public class DefaultFrame extends javax.swing.JFrame {
                     .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(editPanelUNField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(editPanelUNLabel)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(editPanelPWField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(editPanelPWLabel)
                     .addComponent(editPanelPWToggleButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 176, Short.MAX_VALUE)
                 .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(editPanelCancelButton)
                     .addComponent(editPanelOKButton))
@@ -581,6 +609,10 @@ public class DefaultFrame extends javax.swing.JFrame {
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         exitMenuItemActionPerformed(null);
     }//GEN-LAST:event_formWindowClosing
+
+    private void folderTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_folderTreeValueChanged
+        System.out.println(Arrays.toString(folderTree.getSelectionRows()));
+    }//GEN-LAST:event_folderTreeValueChanged
 
     /**
      * @param args the command line arguments
