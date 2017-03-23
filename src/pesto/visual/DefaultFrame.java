@@ -6,9 +6,16 @@
 package pesto.visual;
 
 import java.awt.CardLayout;
+import java.io.File;
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
+import javax.crypto.NoSuchPaddingException;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
@@ -16,6 +23,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import pesto.internal.Entry;
 import pesto.internal.Folder;
+import pesto.internal.crypto.IO;
 import pesto.internal.properties.Password;
 import pesto.internal.properties.Username;
 
@@ -31,7 +39,8 @@ public class DefaultFrame extends javax.swing.JFrame {
     private static Iterator<Map.Entry<String, Entry>> entriesIter;
     private static DefaultTableModel dtm;
     private static Folder currentFolder = rootFolder;
-    private static boolean isPWShown = false;
+    private static boolean isPWShown = false,
+            changed = false;
     private static Entry currentEntry;
 
     /**
@@ -170,6 +179,9 @@ public class DefaultFrame extends javax.swing.JFrame {
         fileMenu = new javax.swing.JMenu();
         newEntryMenuItem = new javax.swing.JMenuItem();
         newFolderMenuItem = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        saveMenuItem = new javax.swing.JMenuItem();
+        loadMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         exitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
@@ -468,6 +480,7 @@ public class DefaultFrame extends javax.swing.JFrame {
         });
         fileMenu.add(newEntryMenuItem);
 
+        newFolderMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
         newFolderMenuItem.setText("New folder");
         newFolderMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -475,6 +488,20 @@ public class DefaultFrame extends javax.swing.JFrame {
             }
         });
         fileMenu.add(newFolderMenuItem);
+        fileMenu.add(jSeparator3);
+
+        saveMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        saveMenuItem.setText("Save");
+        saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(saveMenuItem);
+
+        loadMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        loadMenuItem.setText("Load");
+        fileMenu.add(loadMenuItem);
         fileMenu.add(jSeparator2);
 
         exitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
@@ -525,6 +552,7 @@ public class DefaultFrame extends javax.swing.JFrame {
                         new Password(createPanelPWField.getPassword())));
                 getPanelLayout().show(mainPanel, "listPanel");
                 refreshEntryTable();
+                changed = true;
                 resetFields();
             }
         } else {
@@ -553,12 +581,14 @@ public class DefaultFrame extends javax.swing.JFrame {
         if (res != null) {
             currentFolder.addFolder(new Folder(res, currentFolder));
             refreshFolderTree();
+            changed = true;
         }
     }//GEN-LAST:event_newFolderMenuItemActionPerformed
 
     private void deleteEntryPopupMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEntryPopupMenuItemActionPerformed
         if (currentFolder.deleteEntry((String) entryTable.getValueAt(entryTable.getSelectedRow(), 0))) {
             refreshEntryTable();
+            changed = true;
         }
     }//GEN-LAST:event_deleteEntryPopupMenuItemActionPerformed
 
@@ -581,6 +611,7 @@ public class DefaultFrame extends javax.swing.JFrame {
         isPWShown = false;
         getPanelLayout().show(mainPanel, "listPanel");
         refreshEntryTable();
+        changed = true;
         resetFields();
     }//GEN-LAST:event_editPanelOKButtonActionPerformed
 
@@ -602,7 +633,15 @@ public class DefaultFrame extends javax.swing.JFrame {
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
         if (JOptionPane.showConfirmDialog(this, "Exit Pesto ?", "Exit", JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-            dispose();
+            if (changed) {
+                if (JOptionPane.showConfirmDialog(this, "There are unsaved "
+                        + "changes. Continue ?", "Exit", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                    dispose();
+                }
+            } else {
+                dispose();
+            }
         }
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
@@ -613,6 +652,15 @@ public class DefaultFrame extends javax.swing.JFrame {
     private void folderTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_folderTreeValueChanged
         System.out.println(Arrays.toString(folderTree.getSelectionRows()));
     }//GEN-LAST:event_folderTreeValueChanged
+
+    private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
+        try {
+            IO.save(rootFolder, new File("database.pdb"));
+            changed = false;
+        } catch (NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IOException ex) {
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Save database", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_saveMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -677,12 +725,15 @@ public class DefaultFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private static javax.swing.JPanel listPanel;
+    private javax.swing.JMenuItem loadMenuItem;
     private static javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JLabel newEntryLabel;
     private javax.swing.JMenuItem newEntryMenuItem;
     private javax.swing.JMenuItem newFolderMenuItem;
+    private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
 }
