@@ -85,12 +85,9 @@ public class Entry implements Serializable {
      * @return matching property if found, else {@code null}
      */
     public Property getProperty(String type) {
-        Property tmpProperty;
-        propertiesIter = properties.entrySet().iterator();
-        while (propertiesIter.hasNext()) {
-            tmpProperty = propertiesIter.next().getValue();
-            if (tmpProperty.getType().equals(type)) {
-                return tmpProperty;
+        for(Property value: properties.values()){
+            if(value.getType().equals(type)){
+                return value;
             }
         }
         return null;
