@@ -28,8 +28,9 @@ import pesto.internal.properties.Password;
 import pesto.internal.properties.Username;
 
 /**
+ * Main window
  *
- * @author xerxes
+ * @author Serphentas
  */
 public class DefaultFrame extends javax.swing.JFrame {
 
@@ -659,6 +660,7 @@ public class DefaultFrame extends javax.swing.JFrame {
             changed = false;
         } catch (NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IOException ex) {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Save database", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
         }
     }//GEN-LAST:event_saveMenuItemActionPerformed
 
