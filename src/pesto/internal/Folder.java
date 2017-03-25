@@ -3,7 +3,6 @@ package pesto.internal;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.bouncycastle.util.encoders.Hex;
@@ -23,9 +22,6 @@ public class Folder implements Serializable {
     private final String name,
             uuid;
     private final boolean hasParent;
-
-    private Iterator<Map.Entry<String, Entry>> iter;
-    private Map.Entry<String, Entry> tmpMapEntry;
 
     /**
      * Creates a folder in which children entries and folders may reside
@@ -59,11 +55,9 @@ public class Folder implements Serializable {
      *         {@code null}
      */
     public Entry getEntry(String name) {
-        iter = entries.entrySet().iterator();
-        while (iter.hasNext()) {
-            tmpMapEntry = iter.next();
-            if (tmpMapEntry.getKey().equals(name)) {
-                return tmpMapEntry.getValue();
+        for (Entry value : entries.values()) {
+            if (value.getName().equals(name)) {
+                return value;
             }
         }
         return null;
@@ -88,11 +82,9 @@ public class Folder implements Serializable {
     public boolean deleteEntry(String name) {
         String tmpName = null;
 
-        iter = entries.entrySet().iterator();
-        while (iter.hasNext()) {
-            tmpMapEntry = iter.next();
-            if (tmpMapEntry.getKey().equals(name)) {
-                tmpName = tmpMapEntry.getKey();
+        for (String key : entries.keySet()) {
+            if (key.equals(name)) {
+                tmpName = key;
                 break;
             }
         }
