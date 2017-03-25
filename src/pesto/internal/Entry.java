@@ -2,7 +2,6 @@ package pesto.internal;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import org.bouncycastle.util.encoders.Hex;
 import pesto.internal.crypto.GPCrypto;
@@ -31,7 +30,6 @@ public class Entry implements Serializable {
     private final String name,
             uuid;
 
-    private Iterator<Map.Entry<String, Property>> propertiesIter;
     private String loginURL;
 
     /**
